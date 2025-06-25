@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Realizar Transferência{% endblock %}
+
+{% block content %}
+    <h1>Transferir do Escritório para Pessoal</h1>
+    <p class="text-muted">Mova o dinheiro do seu lucro para suas finanças pessoais.</p>
+    <hr>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="amount" class="form-label">Valor a Transferir (R$)</label>
+                    <input type="text" class="form-control" id="amount" name="amount" placeholder="Ex: 2500,00" required>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Descrição da Transferência</label>
+                    <input type="text" class="form-control" id="description" name="description" value="Retirada de Lucro / Pró-labore">
+                </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Data da Transferência</label>
+                    <input type="date" class="form-control" id="date" name="date" required>
+                </div>
+                <button type="submit" class="btn btn-success">Confirmar Transferência</button>
+                <a href="{% url 'financeiro' %}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+{% endblock %}

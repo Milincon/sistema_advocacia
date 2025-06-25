@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes: {{ processo.title }}{% endblock %}
+
+{% block content %}
+    <div class="mb-3">
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">‹ Voltar ao Dashboard</a>
+        <a href="{% url 'processo_edit' pk=processo.pk %}" class="btn btn-warning">Editar Processo</a>
+        <a href="{% url 'processo_delete' pk=processo.pk %}" class="btn btn-danger">Apagar Processo</a>
+        <a href="{% url 'analise_processo' pk=processo.pk %}" class="btn btn-primary">Analisar Caso com Gemini</a>
+    </div>
+
+    {% if analise_processo_ia %}
+    <div class="card bg-light border-primary my-4 shadow-sm">
+        <div class="card-header">
+            <strong>Resumo Executivo da IA Gemini</strong>
+        </div>
+        <div class="card-body">
+            <p style="white-space: pre-wrap;">{{ analise_processo_ia }}</p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if error_processo_ia %}
+    <div class="alert alert-warning">
+        <strong>Aviso:</strong> {{ error_processo_ia }}
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header">
+            <h2>{{ processo.title }}</h2>
+        </div>
+        <div class="card-body">
+            <p><strong>Cliente:</strong> {{ processo.client.name }}</p>
+            <p><strong>Número do Processo:</strong> {{ processo.case_number|default:"Não informado" }}</p>
+            <p><strong>Status:</strong> <span class="badge bg-info text-dark">{{ processo.get_status_display }}</span></p>
+        </div>
+    </div>
+
+    <h3 class="mt-4">Andamentos e Prazos</h3>
+    <ul class="list-group">
+        {% for update in updates %}
+            <li class="list-group-item">
+                <p>{{ update.description }}</p>
+                {% if update.is_deadline %}
+                    <p class="mb-0"><strong>Prazo Fatal: <span class="text-danger">{{ update.due_date|date:"d/m/Y" }}</span></strong></p>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li class="list-group-item">Nenhum andamento ou prazo cadastrado para este processo.</li>
+        {% endfor %}
+    </ul>
+
+    <h3 class="mt-5">Financeiro do Caso</h3>
+    <div class="card">
+        <div class="card-body p-0">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">Descrição</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Data</th>
+                        <th scope="col" class="text-end">Valor (R$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transacao in transacoes %}
+                        <tr>
+                            <td>{{ transacao.description }}</td>
+                            <td>
+                                {% if transacao.transaction_type == 'INCOME' %}
+                                    <span class="badge bg-success">{{ transacao.get_transaction_type_display }}</span>
+                                {% else %}
+                                    <span class="badge bg-danger">{{ transacao.get_transaction_type_display }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ transacao.get_status_display }}</td>
+                            <td>{{ transacao.due_date|date:"d/m/Y" }}</td>
+                            <td class="text-end">{{ transacao.amount|floatformat:2 }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">Nenhuma transação financeira lançada para este caso.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card mt-5">
+        <div class="card-body">
+            <h4 class="card-title">Adicionar Novo Andamento/Prazo</h4>
+            <form method="POST">
+                {% csrf_token %}
+                {{ update_form.as_p }}
+                <button type="submit" name="submit_andamento" class="btn btn-success">Salvar Andamento</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4 mb-5">
+        <div class="card-body">
+            <h4 class="card-title">Adicionar Lançamento Financeiro</h4>
+            <form method="POST">
+                {% csrf_token %}
+                {{ transaction_form.as_p }}
+                <button type="submit" name="submit_transacao" class="btn btn-info">Salvar Transação</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

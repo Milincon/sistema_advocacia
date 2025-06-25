@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center">
+        <h1>Meu Dashboard</h1>
+        <a href="{% url 'processo_create' %}" class="btn btn-success">Adicionar Novo Processo</a>
+    </div>
+    <hr>
+
+    <h3 class="mt-4">Seus Processos Ativos</h3>
+    <div class="list-group">
+        {% for processo in lista_de_processos %}
+            <a href="{% url 'processo_detalhe' pk=processo.pk %}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ processo.title }}</h5>
+                    <small>Status: {{ processo.get_status_display }}</small> 
+                </div>
+                <p class="mb-1">Cliente: {{ processo.client.name }}</p>
+            </a>
+        {% empty %}
+            <div class="list-group-item">
+                <p class="mb-1">Você ainda não tem nenhum processo cadastrado.</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

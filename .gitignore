@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Ambiente Virtual
+venv/
+
+# Banco de Dados de Desenvolvimento
+db.sqlite3
+*.sqlite3
+
+# Arquivo de segredos
+.env

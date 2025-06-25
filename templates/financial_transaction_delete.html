@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Apagar Lançamento do Escritório{% endblock %}
+
+{% block content %}
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Atenção! Ação Irreversível!</h4>
+        <p>Você tem certeza que deseja apagar o lançamento: <strong>"{{ transaction.description }}"</strong> no valor de R$ {{ transaction.amount|floatformat:2 }}?</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sim, tenho certeza, apagar</button>
+        <a href="{% url 'financeiro' %}" class="btn btn-secondary">Não, cancelar e voltar</a>
+    </form>
+{% endblock %}

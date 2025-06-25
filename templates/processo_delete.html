@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Apagar Processo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'dashboard' %}">Meu Advogado</a>
+            <div class="d-flex align-items-center">
+                <span class="navbar-text me-3">
+                    Bem-vindo, {{ user.get_full_name|default:user.username }}
+                </span>
+                <a href="{% url 'logout' %}" class="btn btn-danger">Sair</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Atenção! Ação Irreversível!</h4>
+            <p>Você tem certeza que deseja apagar o processo: <strong>"{{ processo.title }}"</strong>?</p>
+            <hr>
+            <p class="mb-0">Todos os andamentos e informações financeiras associados a ele também serão permanentemente removidos.</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Sim, tenho certeza, apagar</button>
+            <a href="{% url 'processo_detalhe' pk=processo.pk %}" class="btn btn-secondary">Não, cancelar e voltar</a>
+        </form>
+    </div>
+</body>
+</html>
+<a href="{% url 'dashboard' %}" class="btn btn-secondary mb-3">‹ Voltar ao Dashboard</a>
+<a href="{% url 'processo_edit' pk=processo.pk %}" class="btn btn-warning mb-3">Editar Processo</a>
+<a href="{% url 'processo_delete' pk=processo.pk %}" class="btn btn-danger mb-3">Apagar Processo</a>
