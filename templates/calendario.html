@@ -17,7 +17,6 @@
     .has-deadline { 
         background-color: #ffcdd2; 
         border: 1px solid #e57373;
-        cursor: pointer;
     }
     .popover-body ul {
         padding-left: 1.2rem;
@@ -129,15 +128,17 @@
 
     // Lida com a abertura do Modal para adicionar novo evento
     const addEventModal = document.getElementById('addEventModal');
-    addEventModal.addEventListener('show.bs.modal', event => {
-      const button = event.relatedTarget;
-      const dateString = button.getAttribute('data-date');
-      const dateInput = addEventModal.querySelector('#id_due_date');
-      dateInput.value = dateString;
-      const modalTitle = addEventModal.querySelector('.modal-title');
-      const dateObj = new Date(dateString + 'T00:00:00');
-      const formattedDate = dateObj.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
-      modalTitle.textContent = `Adicionar Tarefa/Prazo para ${formattedDate}`;
-    });
+    if (addEventModal) {
+        addEventModal.addEventListener('show.bs.modal', event => {
+          const button = event.relatedTarget;
+          const dateString = button.getAttribute('data-date');
+          const dateInput = addEventModal.querySelector('#id_due_date');
+          dateInput.value = dateString;
+          const modalTitle = addEventModal.querySelector('.modal-title');
+          const dateObj = new Date(dateString + 'T00:00:00');
+          const formattedDate = dateObj.toLocaleDateString('pt-BR', { timeZone: 'UTC' });
+          modalTitle.textContent = `Adicionar Tarefa/Prazo para ${formattedDate}`;
+        });
+    }
 </script>
 {% endblock %}

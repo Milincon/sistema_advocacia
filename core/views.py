@@ -139,13 +139,13 @@ def analise_gemini_view(request):
         total_receitas = transacoes.filter(transaction_type='INCOME').aggregate(total=Sum('amount'))['total'] or 0
         total_despesas = transacoes.filter(transaction_type='EXPENSE').aggregate(total=Sum('amount'))['total'] or 0
         saldo = total_receitas - total_despesas
-        prompt = f"..." # Prompt omitido para brevidade
+        prompt = f"..."
         model = genai.GenerativeModel('gemini-1.5-flash')
         response = model.generate_content(prompt)
         context['analise_ia'] = response.text
     except Exception as e:
         context['error_ia'] = f"Ocorreu um erro ao contatar a IA. Detalhes: {e}"
-
+    
     transacoes = FinancialTransaction.objects.filter(user=request.user)
     context['total_receitas'] = transacoes.filter(transaction_type='INCOME').aggregate(total=Sum('amount'))['total'] or 0
     context['total_despesas'] = transacoes.filter(transaction_type='EXPENSE').aggregate(total=Sum('amount'))['total'] or 0
@@ -247,7 +247,7 @@ def financial_transaction_delete_view(request, pk):
         return redirect('financeiro')
     context = { 'transaction': transaction }
     return render(request, 'financial_transaction_delete.html', context)
-
+    
 # --- View de Análise do Processo com IA ---
 @login_required(login_url='login')
 def analise_processo_view(request, pk):
