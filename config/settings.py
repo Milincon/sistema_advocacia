@@ -1,15 +1,6 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-import locale # Importa a biblioteca de locale
-
-# Tenta configurar o locale para Português do Brasil (padrão Linux)
-# Se falhar, tenta o padrão Windows. Isso torna o código compatível com ambos.
-try:
-    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-except locale.Error:
-    locale.setlocale(locale.LC_ALL, 'Portuguese_Brazil.1252')
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +15,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # Lê o valor da variável de ambiente. Se não encontrar, assume 'False'
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['*'] # Permite todos os hosts por enquanto
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
